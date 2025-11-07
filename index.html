@@ -5,8 +5,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BlockLife RP — загрузка</title>
-  <link rel="preload" href="assets/noise.png" as="image">
-  <link rel="stylesheet" href="style.css">
+
+  <!-- относительные пути — всегда безопасно -->
+  <link rel="preload" href="./assets/noise.png" as="image">
+  <link rel="stylesheet" href="./style.css">
+
+  <!-- Если это project page (репозиторий НЕ glent87.github.io), можно сразу добавить base:
+       <base href="/<repo-name>/">
+       Но лучше сначала попробовать относительные пути (./) — они универсальны -->
 </head>
 <body>
   <div class="bg"></div>
@@ -19,7 +25,7 @@
 
   <main class="shell">
     <header class="brand">
-      <img src="assets/logo.svg" alt="Логотип" class="logo"/>
+      <img src="./assets/logo.svg" alt="Логотип" class="logo"/>
       <div>
         <h1>BlockLife RP</h1>
         <p class="subtitle">Режим: DarkRP</p>
@@ -35,6 +41,7 @@
     <footer class="foot">Экран не интерактивен. Просто ожидайте завершения загрузки.</footer>
   </main>
 
-  <script src="script.js"></script>
+  <!-- defer, чтобы скрипт выполнялся после построения DOM -->
+  <script src="./script.js" defer></script>
 </body>
 </html>
