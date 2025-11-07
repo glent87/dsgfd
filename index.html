@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BlockLife RP — загрузка</title>
+  <link rel="preload" href="assets/noise.png" as="image">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="orbs">
+    <i class="o o1"></i>
+    <i class="o o2"></i>
+    <i class="o o3"></i>
+  </div>
+  <div class="grain"></div>
+
+  <main class="shell">
+    <header class="brand">
+      <img src="assets/logo.svg" alt="Логотип" class="logo"/>
+      <div>
+        <h1>BlockLife RP</h1>
+        <p class="subtitle">Режим: DarkRP</p>
+      </div>
+    </header>
+
+    <section class="center">
+      <div class="loader" aria-hidden="true"><span></span></div>
+      <p class="status" id="status">Загрузка ресурсов…</p>
+      <p class="tip" id="tip"></p>
+    </section>
+
+    <footer class="foot">Экран не интерактивен. Просто ожидайте завершения загрузки.</footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
