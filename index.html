@@ -6,13 +6,191 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BlockLife RP — загрузка</title>
 
-  <!-- относительные пути — всегда безопасно -->
-  <link rel="preload" href="./assets/noise.png" as="image">
-  <link rel="stylesheet" href="./style.css">
+  <!-- шрифт Poppins (опционально) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" rel="stylesheet">
 
-  <!-- Если это project page (репозиторий НЕ glent87.github.io), можно сразу добавить base:
-       <base href="/<repo-name>/">
-       Но лучше сначала попробовать относительные пути (./) — они универсальны -->
+  <style>
+  /* ============= variables & base ============= */
+  :root{
+    --bg0:#0a0f16;
+    --bg1:#0e1521;
+    --accent1:#3aa1ff; /* blue */
+    --accent2:#7c5cff; /* purple */
+    --accent3:#31d0aa; /* teal */
+    --line:#374459;
+    --dash:#4a5974;
+    --text:#e7eef7;
+    --sub:#a6b3c6;
+    --muted:#92a6c0;
+    --card-bg:#0f1720;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, "Helvetica Neue", sans-serif;
+    color:var(--text);
+    background:var(--bg0);
+    overflow:hidden;
+    user-select:none;
+    -webkit-user-drag:none;
+    cursor:default;
+    pointer-events:none;
+  }
+
+  /* Ambient background */
+  .bg{
+    position:fixed; inset:0;
+    background:
+      radial-gradient(1200px 700px at 20% 20%, rgba(58,161,255,.25), transparent 60%),
+      radial-gradient(1000px 600px at 80% 30%, rgba(124,92,255,.22), transparent 60%),
+      radial-gradient(900px 700px at 50% 90%, rgba(49,208,170,.18), transparent 60%),
+      linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 100%);
+    animation: float 28s ease-in-out infinite alternate;
+    filter:saturate(110%);
+  }
+
+  .orbs{position:fixed; inset:0; overflow:hidden}
+  .o{
+    position:absolute; width:44vmin; height:44vmin; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, rgba(96,170,255,.45), rgba(96,170,255,0) 60%);
+    filter:blur(20px); mix-blend-mode:screen
+  }
+  .o2{background:radial-gradient(circle at 70% 40%, rgba(124,92,255,.45), rgba(124,92,255,0) 60%)}
+  .o3{background:radial-gradient(circle at 50% 70%, rgba(49,208,170,.45), rgba(49,208,170,0) 60%)}
+  .o1{animation: orb1 36s ease-in-out infinite alternate; left:-10vmin; top:10vmin}
+  .o2{animation: orb2 30s ease-in-out infinite alternate; right:-8vmin; top:20vmin}
+  .o3{animation: orb3 34s ease-in-out infinite alternate; left:20vmin; bottom:-12vmin}
+
+  .grain{
+    position:fixed; inset:0;
+    background-image:url("assets/noise.png");
+    opacity:.12; mix-blend-mode:soft-light;
+    animation:grainShift 5s steps(4) infinite
+  }
+
+  /* Layout */
+  .shell{
+    position:relative; height:100%;
+    padding:6vh 7vw;
+    display:grid;
+    grid-template-rows:auto 1fr auto;
+    gap:24px;
+  }
+  .brand{
+    display:flex; align-items:center; gap:14px;
+  }
+  .logo{width:72px; height:72px; filter: drop-shadow(0 6px 16px rgba(0,0,0,.35))}
+  h1{margin:0; font-weight:800; font-size:clamp(26px,6vw,48px)}
+  .subtitle{margin:4px 0 0 0; color:var(--sub); font-size:14px}
+
+  .center{
+    display:grid; place-items:center;
+    gap:16px; align-content:center
+  }
+  .status{margin:0; color:#b6c5d8; font-size:14px}
+  .tip{margin:0; color:var(--muted); font-size:13px}
+
+  /* Radar loader (ваш оригинал) */
+  .loader{
+    position:relative;
+    width:clamp(140px,18vmin,200px);
+    height:clamp(140px,18vmin,200px);
+    background:transparent;
+    border-radius:50%;
+    box-shadow: 25px 25px 75px rgba(0,0,0,.55);
+    border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .loader::before{
+    content:'';
+    position:absolute; inset:18px;
+    background:transparent;
+    border:1px dashed var(--dash);
+    border-radius:50%;
+    box-shadow: inset -5px -5px 25px rgba(0,0,0,.25), inset 5px 5px 35px rgba(0,0,0,.25);
+  }
+  .loader::after{
+    content:'';
+    position:absolute; width:36%; height:36%;
+    border-radius:50%;
+    border:1px dashed var(--dash);
+    box-shadow: inset -5px -5px 25px rgba(0,0,0,.25), inset 5px 5px 35px rgba(0,0,0,.25);
+  }
+  .loader span{
+    position:absolute; top:50%; left:50%;
+    width:50%; height:100%;
+    background:transparent;
+    transform-origin: top left;
+    animation: radar81 2s linear infinite;
+    border-top:1px dashed rgba(231,238,247,.85)
+  }
+  .loader span::before{
+    content:'';
+    position:absolute; top:0; left:0;
+    width:100%; height:100%;
+    background: var(--accent3);
+    transform-origin: top left;
+    transform: rotate(-55deg);
+    filter: blur(30px) drop-shadow(12px 12px 16px var(--accent3));
+    opacity:.9
+  }
+  .loader span{ 
+    box-shadow: 0 -2px 18px var(--accent1);
+  }
+  .loader{ 
+    outline: 1px solid rgba(255,255,255,.05);
+    background: radial-gradient(60% 60% at 50% 50%, rgba(49,208,170,.08), rgba(0,0,0,0) 60%);
+  }
+
+  .foot{color:#6f819a; font-size:12px; align-self:end}
+
+  /* Keyframes */
+  @keyframes radar81{ 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+  @keyframes float{ 0%{transform:translateY(-1.2%)} 100%{transform:translateY(1.2%)} }
+  @keyframes grainShift{ 0%{background-position:0 0} 100%{background-position:256px 256px} }
+  @keyframes orb1{ 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(12vmin,-6vmin) scale(1.08)} }
+  @keyframes orb2{ 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(-10vmin,6vmin) scale(1.06)} }
+  @keyframes orb3{ 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(6vmin,-10vmin) scale(1.07)} }
+
+  /* ============= Single loading text ============= */
+  .text-card {
+    background-color: var(--card-bg);
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+    display:inline-block;
+    box-shadow: 0 6px 20px rgba(0,0,0,.45);
+    border:1px solid rgba(255,255,255,0.03);
+    margin-top: 16px;
+  }
+
+  .text-loader {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--accent2);
+    font-weight: 500;
+    font-size: 16px;
+  }
+
+  .text-loader .main {
+    margin:0;
+    font-size:14px;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0%,100%{opacity:0.7;}
+    50%{opacity:1;}
+  }
+
+  @media (max-width:560px){
+    .shell{padding:6vh 5vw}
+    .logo{width:60px; height:60px}
+    .text-loader{font-size:14px}
+  }
+  </style>
 </head>
 <body>
   <div class="bg"></div>
@@ -23,25 +201,56 @@
   </div>
   <div class="grain"></div>
 
-  <main class="shell">
+  <main class="shell" role="main" aria-labelledby="brand-title">
     <header class="brand">
-      <img src="./assets/logo.svg" alt="Логотип" class="logo"/>
+      <img src="./assets/logo.png" alt="Логотип" class="logo"/>
       <div>
-        <h1>BlockLife RP</h1>
+        <h1 id="brand-title">BlockLife RP</h1>
         <p class="subtitle">Режим: DarkRP</p>
       </div>
     </header>
 
-    <section class="center">
+    <section class="center" aria-live="polite">
+      <!-- radar loader (ваш оригинал) -->
       <div class="loader" aria-hidden="true"><span></span></div>
-      <p class="status" id="status">Загрузка ресурсов…</p>
-      <p class="tip" id="tip"></p>
+
+      <!-- Одна надпись "Загрузка…" -->
+      <div class="text-card" aria-hidden="false">
+        <div class="text-loader" role="status" aria-label="Статус загрузки">
+          <p class="main">Загрузка…</p>
+        </div>
+      </div>
+
+      <!-- <p class="status" id="status">Загрузка ресурсов…</p> -->
+      <!-- <p class="tip" id="tip">Подождите, это займет пару секунд.</p> -->
     </section>
 
     <footer class="foot">Экран не интерактивен. Просто ожидайте завершения загрузки.</footer>
   </main>
 
-  <!-- defer, чтобы скрипт выполнялся после построения DOM -->
-  <script src="./script.js" defer></script>
+  <script>
+    // небольшой скрипт: меняет советы (tip) раз в 4 секунды
+    (function(){
+      const tips = [
+        "Подготовка модулей...",
+        "Синхронизация данных сервера...",
+        "Загрузка картинок и текстур...",
+        "Оптимизация подключений...",
+        "Подключение к базе данных..."
+      ];
+      const tipEl = document.getElementById('tip');
+      let i = 0;
+      if (tipEl) {
+        tipEl.textContent = tips[0];
+        setInterval(() => {
+          i = (i + 1) % tips.length;
+          tipEl.textContent = tips[i];
+        }, 4000);
+      }
+
+      // если нужно, сделать интерактивными только некоторые элементы:
+      // document.querySelectorAll('.text-card, .loader').forEach(el=>el.style.pointerEvents='auto');
+    })();
+  </script>
 </body>
 </html>
