@@ -16,25 +16,19 @@
     --accent3:#31d0aa;
     --accent4:#ff4757;
     --accent5:#ffa502;
-    --line:#374459;
-    --dash:#4a5974;
     --text:#e7eef7;
     --sub:#a6b3c6;
     --muted:#92a6c0;
-    --card-bg:#0f1720;
     --glow: 0 0 30px currentColor;
   }
-  *{box-sizing:border-box}
-  html,body{height:100%; margin:0;}
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
   body{
     font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, "Helvetica Neue", sans-serif;
     color:var(--text);
     overflow:hidden;
     user-select:none;
-    -webkit-user-drag:none;
     cursor:default;
-    pointer-events:none;
-    transition: background 1s ease;
     background: var(--bg0);
   }
 
@@ -50,270 +44,155 @@
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s ease, transform 1s ease;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
     padding: 20px;
     pointer-events: none;
   }
   
   .scene-container.active {
     opacity: 1;
-    transform: translateY(0);
+    visibility: visible;
     pointer-events: auto;
   }
   
   .scene-content {
     width: 100%;
-    max-width: 900px;
+    max-width: 700px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    gap: 50px;
   }
 
-  /* ============= SCENE 1: ИНИЦИАЛИЗАЦИЯ ============= */
-  #scene1 {
-    background: linear-gradient(135deg, #0a0f16 0%, #0d1b2a 100%);
-  }
-  
-  .scene1-bg {
-    position: fixed;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 10% 20%, rgba(58, 161, 255, 0.15) 0%, transparent 40%),
-      radial-gradient(circle at 90% 80%, rgba(124, 92, 255, 0.1) 0%, transparent 40%);
-    animation: pulse-bg 6s ease-in-out infinite alternate;
-  }
-  
-  .scene1-loader {
+  /* ============= LOADER ANIMATIONS ============= */
+  .loader-wrapper {
     position: relative;
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
+  }
+
+  /* Scene 1: Инициализация */
+  .scene1-bg {
+    background: linear-gradient(135deg, #0a0f16 0%, #0d1b2a 100%);
   }
   
   .scene1-core {
     position: absolute;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     background: conic-gradient(from 0deg, var(--accent1), var(--accent2), var(--accent3), var(--accent1));
     border-radius: 50%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     animation: rotate-core 4s linear infinite;
-    box-shadow: 0 0 50px var(--accent1);
+    box-shadow: 0 0 40px var(--accent1);
   }
   
   .scene1-orb {
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
     background: var(--accent2);
     border-radius: 50%;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotate(0deg) translateX(80px);
+    transform: translate(-50%, -50%) rotate(0deg) translateX(70px);
     animation: orbit 3s linear infinite;
   }
-  
-  .scene1-text h2 {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 10px 0;
-    background: linear-gradient(90deg, var(--accent1), var(--accent3));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: var(--glow);
-  }
-  
-  .scene1-text p {
-    color: var(--sub);
-    font-size: 17px;
-    margin: 0;
-  }
 
-  /* ============= SCENE 2: МОДЕЛИ ============= */
-  #scene2 {
-    background: linear-gradient(135deg, #0d1218 0%, #1a2a3a 100%);
-  }
-  
+  /* Scene 2: Модели */
   .scene2-bg {
-    position: fixed;
-    inset: 0;
-    background: 
-      repeating-linear-gradient(90deg, 
-        transparent 0px, 
-        transparent 19px, 
-        rgba(58, 161, 255, 0.05) 20px),
-      repeating-linear-gradient(0deg, 
-        transparent 0px, 
-        transparent 19px, 
-        rgba(124, 92, 255, 0.05) 20px);
-    background-size: 20px 20px;
-  }
-  
-  .scene2-loader {
-    width: 220px;
-    height: 180px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: linear-gradient(135deg, #0d1218 0%, #1a2a3a 100%);
   }
   
   .scene2-model {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background: linear-gradient(45deg, var(--accent1), var(--accent2));
-    border-radius: 8px;
+    border-radius: 6px;
     animation: model-float 2s ease-in-out infinite;
-    box-shadow: 0 10px 30px rgba(58, 161, 255, 0.4);
   }
   
   .scene2-model:nth-child(1) { 
     top: 20px; 
-    left: 40px; 
+    left: 30px; 
     animation-delay: 0s;
   }
   
   .scene2-model:nth-child(2) { 
     top: 60px; 
-    left: 100px; 
+    left: 80px; 
     animation-delay: 0.3s;
     background: linear-gradient(45deg, var(--accent2), var(--accent3));
   }
   
   .scene2-model:nth-child(3) { 
     top: 100px; 
-    left: 160px; 
+    left: 130px; 
     animation-delay: 0.6s;
     background: linear-gradient(45deg, var(--accent3), var(--accent1));
   }
-  
-  .scene2-text h2 {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 10px 0;
-    color: var(--accent1);
-    text-shadow: 0 0 30px rgba(58, 161, 255, 0.5);
-  }
 
-  /* ============= SCENE 3: ТЕКСТУРЫ ============= */
-  #scene3 {
+  /* Scene 3: Текстуры */
+  .scene3-bg {
     background: linear-gradient(135deg, #151f2a 0%, #0a1418 100%);
   }
   
-  .scene3-bg {
-    position: fixed;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 50% 50%, rgba(49, 208, 170, 0.1) 0%, transparent 60%),
-      repeating-linear-gradient(45deg, 
-        transparent 0px, 
-        transparent 24px, 
-        rgba(58, 161, 255, 0.03) 25px);
-  }
-  
   .scene3-loader {
-    width: 200px;
-    height: 200px;
+    width: 160px;
+    height: 160px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    gap: 6px;
-    transform: perspective(500px) rotateX(15deg);
+    gap: 5px;
   }
   
   .scene3-tile {
     background: linear-gradient(135deg, var(--accent3), var(--accent1));
-    border-radius: 3px;
+    border-radius: 2px;
     opacity: 0.4;
     animation: tile-pulse 1.5s ease-in-out infinite;
   }
   
   .scene3-tile:nth-child(odd) { animation-delay: 0.5s; }
-  
-  .scene3-text h2 {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 10px 0;
-    color: var(--accent3);
-    text-shadow: 0 0 30px rgba(49, 208, 170, 0.5);
-  }
 
-  /* ============= SCENE 4: АУДИО ============= */
-  #scene4 {
+  /* Scene 4: Аудио */
+  .scene4-bg {
     background: linear-gradient(135deg, #1a1820 0%, #0d0a14 100%);
   }
   
-  .scene4-bg {
-    position: fixed;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 70% 30%, rgba(124, 92, 255, 0.2) 0%, transparent 50%),
-      radial-gradient(circle at 30% 70%, rgba(58, 161, 255, 0.15) 0%, transparent 50%);
-    animation: rotate-bg 40s linear infinite;
-  }
-  
   .scene4-loader {
-    width: 240px;
-    height: 140px;
-    position: relative;
+    width: 200px;
+    height: 120px;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    gap: 6px;
+    gap: 5px;
   }
   
   .scene4-wave {
-    width: 10px;
+    width: 8px;
     background: linear-gradient(to top, var(--accent2), var(--accent1), var(--accent3));
-    border-radius: 5px;
+    border-radius: 4px;
     animation: sound-wave 1.2s ease-in-out infinite;
-    box-shadow: 0 5px 20px rgba(124, 92, 255, 0.4);
   }
   
-  .scene4-wave:nth-child(1) { height: 40px; animation-delay: 0.1s; }
-  .scene4-wave:nth-child(2) { height: 70px; animation-delay: 0.2s; }
-  .scene4-wave:nth-child(3) { height: 100px; animation-delay: 0.3s; }
-  .scene4-wave:nth-child(4) { height: 120px; animation-delay: 0.4s; }
-  .scene4-wave:nth-child(5) { height: 140px; animation-delay: 0.5s; }
-  .scene4-wave:nth-child(6) { height: 120px; animation-delay: 0.6s; }
-  .scene4-wave:nth-child(7) { height: 100px; animation-delay: 0.7s; }
-  .scene4-wave:nth-child(8) { height: 70px; animation-delay: 0.8s; }
-  .scene4-wave:nth-child(9) { height: 40px; animation-delay: 0.9s; }
-  
-  .scene4-text h2 {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 10px 0;
-    color: var(--accent2);
-    text-shadow: 0 0 30px rgba(124, 92, 255, 0.5);
-  }
+  .scene4-wave:nth-child(1) { height: 35px; animation-delay: 0.1s; }
+  .scene4-wave:nth-child(2) { height: 60px; animation-delay: 0.2s; }
+  .scene4-wave:nth-child(3) { height: 85px; animation-delay: 0.3s; }
+  .scene4-wave:nth-child(4) { height: 100px; animation-delay: 0.4s; }
+  .scene4-wave:nth-child(5) { height: 120px; animation-delay: 0.5s; }
+  .scene4-wave:nth-child(6) { height: 100px; animation-delay: 0.6s; }
+  .scene4-wave:nth-child(7) { height: 85px; animation-delay: 0.7s; }
+  .scene4-wave:nth-child(8) { height: 60px; animation-delay: 0.8s; }
+  .scene4-wave:nth-child(9) { height: 35px; animation-delay: 0.9s; }
 
-  /* ============= SCENE 5: СКРИПТЫ ============= */
-  #scene5 {
-    background: linear-gradient(135deg, #0f1720 0%, #1a1a2a 100%);
-  }
-  
+  /* Scene 5: Скрипты */
   .scene5-bg {
-    position: fixed;
-    inset: 0;
-    background: 
-      linear-gradient(45deg, transparent 48%, rgba(255, 71, 87, 0.1) 50%, transparent 52%),
-      linear-gradient(-45deg, transparent 48%, rgba(255, 165, 2, 0.1) 50%, transparent 52%);
-    background-size: 60px 60px;
-    animation: grid-move 15s linear infinite;
-  }
-  
-  .scene5-loader {
-    width: 240px;
-    height: 160px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: linear-gradient(135deg, #0f1720 0%, #1a1a2a 100%);
   }
   
   .scene5-code {
@@ -327,44 +206,20 @@
     overflow: hidden;
     border-right: 2px solid var(--accent4);
   }
-  
-  .scene5-text h2 {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 10px 0;
-    color: var(--accent4);
-    text-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
-  }
 
-  /* ============= SCENE 6: МАТЕРИАЛЫ ============= */
-  #scene6 {
+  /* Scene 6: Материалы */
+  .scene6-bg {
     background: linear-gradient(135deg, #0f1720 0%, #1a2a3a 100%);
   }
   
-  .scene6-bg {
-    position: fixed;
-    inset: 0;
-    background: 
-      repeating-linear-gradient(90deg, 
-        transparent 0px, 
-        transparent 14px, 
-        rgba(58, 161, 255, 0.05) 15px),
-      repeating-linear-gradient(0deg, 
-        transparent 0px, 
-        transparent 14px, 
-        rgba(124, 92, 255, 0.05) 15px);
-    background-size: 15px 15px;
-  }
-  
   .scene6-loader {
-    width: 200px;
-    height: 140px;
+    width: 180px;
+    height: 120px;
     background: rgba(15, 23, 32, 0.8);
     border: 2px solid var(--accent3);
-    border-radius: 12px;
+    border-radius: 10px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 15px 40px rgba(49, 208, 170, 0.3);
     animation: window-pulse 2.5s ease-in-out infinite;
   }
   
@@ -385,44 +240,24 @@
     top: 50px;
     left: 10px;
     right: 10px;
-    height: 60px;
+    height: 50px;
     background: linear-gradient(90deg, 
       transparent 0%, 
       rgba(49, 208, 170, 0.4) 25%,
       rgba(49, 208, 170, 0.4) 75%,
       transparent 100%);
-    border-radius: 6px;
+    border-radius: 4px;
     animation: loading-bar 1.8s ease-in-out infinite;
   }
-  
-  .scene6-text h2 {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 10px 0;
-    color: var(--accent3);
-    text-shadow: 0 0 30px rgba(49, 208, 170, 0.5);
-  }
 
-  /* ============= SCENE 7: ИГРОКИ ============= */
-  #scene7 {
+  /* Scene 7: Игроки */
+  .scene7-bg {
     background: linear-gradient(135deg, #1a2832 0%, #0a1418 100%);
   }
   
-  .scene7-bg {
-    position: fixed;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 50% 50%, rgba(49, 208, 170, 0.15) 0%, transparent 70%),
-      repeating-linear-gradient(0deg, 
-        transparent, 
-        transparent 2px, 
-        rgba(58, 161, 255, 0.05) 3px, 
-        rgba(58, 161, 255, 0.05) 4px);
-  }
-  
   .scene7-loader {
-    width: 200px;
-    height: 120px;
+    width: 180px;
+    height: 100px;
     position: relative;
     display: flex;
     align-items: center;
@@ -431,44 +266,26 @@
   
   .scene7-player {
     position: absolute;
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     background: linear-gradient(45deg, var(--accent1), var(--accent2));
     border-radius: 50%;
     animation: player-spawn 2s ease-in-out infinite;
-    box-shadow: 0 5px 20px rgba(58, 161, 255, 0.4);
   }
   
-  .scene7-player:nth-child(1) { left: 40px; animation-delay: 0s; }
-  .scene7-player:nth-child(2) { left: 80px; animation-delay: 0.2s; }
-  .scene7-player:nth-child(3) { left: 120px; animation-delay: 0.4s; }
-  .scene7-player:nth-child(4) { left: 160px; animation-delay: 0.6s; }
-  
-  .scene7-text h2 {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 10px 0;
-    color: var(--accent1);
-    text-shadow: 0 0 30px rgba(58, 161, 255, 0.5);
-  }
+  .scene7-player:nth-child(1) { left: 30px; animation-delay: 0s; }
+  .scene7-player:nth-child(2) { left: 70px; animation-delay: 0.2s; }
+  .scene7-player:nth-child(3) { left: 110px; animation-delay: 0.4s; }
+  .scene7-player:nth-child(4) { left: 150px; animation-delay: 0.6s; }
 
-  /* ============= SCENE 8: ОРУЖИЕ ============= */
-  #scene8 {
+  /* Scene 8: Оружие */
+  .scene8-bg {
     background: linear-gradient(135deg, #2a1a3a 0%, #0d0a14 100%);
   }
   
-  .scene8-bg {
-    position: fixed;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 30% 40%, rgba(124, 92, 255, 0.25) 0%, transparent 40%),
-      radial-gradient(circle at 70% 60%, rgba(58, 161, 255, 0.2) 0%, transparent 40%);
-    animation: pulse-bg 5s ease-in-out infinite alternate;
-  }
-  
   .scene8-loader {
-    width: 220px;
-    height: 100px;
+    width: 200px;
+    height: 80px;
     position: relative;
     display: flex;
     align-items: center;
@@ -477,60 +294,36 @@
   
   .scene8-weapon {
     position: absolute;
-    width: 80px;
-    height: 20px;
+    width: 70px;
+    height: 18px;
     background: linear-gradient(90deg, var(--accent4), var(--accent5));
     border-radius: 4px;
     animation: weapon-float 2s ease-in-out infinite;
-    box-shadow: 0 5px 20px rgba(255, 71, 87, 0.4);
   }
   
   .scene8-weapon:nth-child(1) { 
-    top: 20px; 
-    left: 30px; 
+    top: 15px; 
+    left: 25px; 
     animation-delay: 0s;
     transform: rotate(15deg);
   }
   
   .scene8-weapon:nth-child(2) { 
-    top: 60px; 
-    left: 110px; 
+    top: 50px; 
+    left: 100px; 
     animation-delay: 0.3s;
     transform: rotate(-15deg);
     background: linear-gradient(90deg, var(--accent5), var(--accent4));
   }
-  
-  .scene8-text h2 {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 10px 0;
-    color: var(--accent4);
-    text-shadow: 0 0 30px rgba(255, 71, 87, 0.5);
-  }
 
-  /* ============= SCENE 9: РЕЖИМ ИГРЫ ============= */
-  #scene9 {
+  /* Scene 9: Режим игры */
+  .scene9-bg {
     background: linear-gradient(135deg, #0a1820 0%, #1a2a32 100%);
   }
   
-  .scene9-bg {
-    position: fixed;
-    inset: 0;
-    background: 
-      repeating-linear-gradient(90deg, 
-        transparent 0px, 
-        transparent 49px, 
-        rgba(58, 161, 255, 0.08) 50px),
-      repeating-linear-gradient(0deg, 
-        transparent 0px, 
-        transparent 49px, 
-        rgba(124, 92, 255, 0.08) 50px);
-    background-size: 50px 50px;
-  }
-  
   .scene9-loader {
-    width: 200px;
-    height: 140px;
+    width: 180px;
+    height: 120px;
     position: relative;
     display: flex;
     align-items: center;
@@ -539,12 +332,11 @@
   
   .scene9-mode {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background: linear-gradient(45deg, var(--accent5), var(--accent1));
-    border-radius: 10px;
+    border-radius: 8px;
     animation: mode-rotate 3s linear infinite;
-    box-shadow: 0 10px 30px rgba(255, 165, 2, 0.4);
   }
   
   .scene9-mode::before {
@@ -557,236 +349,134 @@
     font-weight: bold;
     font-family: 'Orbitron', sans-serif;
   }
-  
-  .scene9-text h2 {
-    font-size: 32px;
-    font-weight: 800;
-    margin: 0 0 10px 0;
-    color: var(--accent5);
-    text-shadow: 0 0 30px rgba(255, 165, 2, 0.5);
-  }
 
-  /* ============= SCENE 10: СЕТЬ ============= */
-  <!-- #scene10 { -->
-    <!-- background: linear-gradient(135deg, #1a0f2a 0%, #0d0518 100%); -->
-  <!-- } -->
-  
-  <!-- .scene10-bg { -->
-    <!-- position: fixed; -->
-    <!-- inset: 0; -->
-    <!-- background:  -->
-      <!-- radial-gradient(circle at 50% 50%, rgba(124, 92, 255, 0.1) 0%, transparent 60%), -->
-      <!-- repeating-linear-gradient(45deg,  -->
-        <!-- transparent 0px,  -->
-        <!-- transparent 9px,  -->
-        <!-- rgba(58, 161, 255, 0.05) 10px); -->
-  <!-- } -->
-  
-  <!-- .scene10-loader { -->
-    <!-- width: 220px; -->
-    <!-- height: 220px; -->
-    <!-- position: relative; -->
-  <!-- } -->
-  
-  <!-- .scene10-node { -->
-    <!-- position: absolute; -->
-    <!-- width: 16px; -->
-    <!-- height: 16px; -->
-    <!-- background: var(--accent2); -->
-    <!-- border-radius: 50%; -->
-    <!-- box-shadow: 0 0 20px var(--accent2); -->
-    <!-- z-index: 2; -->
-  <!-- } -->
-  
-  <!-- .scene10-node:nth-child(1) { top: 20px; left: 20px; animation: node-pulse 2s infinite; } -->
-  <!-- .scene10-node:nth-child(2) { top: 20px; right: 20px; animation: node-pulse 2s infinite 0.2s; } -->
-  <!-- .scene10-node:nth-child(3) { bottom: 20px; left: 20px; animation: node-pulse 2s infinite 0.4s; } -->
-  <!-- .scene10-node:nth-child(4) { bottom: 20px; right: 20px; animation: node-pulse 2s infinite 0.6s; } -->
-  <!-- .scene10-node:nth-child(5) { top: 50%; left: 50%; transform: translate(-50%, -50%); animation: node-pulse 2s infinite 0.8s; background: var(--accent1); } -->
-  
-  <!-- .scene10-connection { -->
-    <!-- position: absolute; -->
-    <!-- height: 2px; -->
-    <!-- background: linear-gradient(90deg, var(--accent1), var(--accent2)); -->
-    <!-- transform-origin: 0 0; -->
-    <!-- z-index: 1; -->
-  <!-- } -->
-  
-  <!-- .scene10-text h2 { -->
-    <!-- font-size: 32px; -->
-    <!-- font-weight: 800; -->
-    <!-- margin: 0 0 10px 0; -->
-    <!-- color: var(--accent2); -->
-    <!-- text-shadow: 0 0 30px rgba(124, 92, 255, 0.5); -->
-  <!-- } -->
-
-  /* ============= SCENE 11: ФИНАЛИЗАЦИЯ ============= */
-  #scene11 {
+  /* Scene 10: Финализация */
+  .scene10-bg {
     background: linear-gradient(135deg, #0a0f16 0%, #0d1b2a 100%);
   }
   
-  .scene11-bg {
-    position: fixed;
-    inset: 0;
-    background: 
-      radial-gradient(circle at 20% 30%, rgba(58, 161, 255, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(124, 92, 255, 0.2) 0%, transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(49, 208, 170, 0.15) 0%, transparent 60%);
-    animation: final-pulse 4s ease-in-out infinite;
-  }
-  
-  .scene11-loader {
-    width: 240px;
-    height: 240px;
+  .scene10-loader {
+    width: 200px;
+    height: 200px;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
-  .scene11-ring {
+  .scene10-ring {
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 3px solid transparent;
+    border: 2px solid transparent;
     border-top-color: var(--accent1);
     border-radius: 50%;
     animation: ring-rotate 3s linear infinite;
   }
   
-  .scene11-ring:nth-child(2) {
+  .scene10-ring:nth-child(2) {
     width: 80%;
     height: 80%;
     border-top-color: var(--accent2);
     animation-delay: 0.2s;
   }
   
-  .scene11-ring:nth-child(3) {
+  .scene10-ring:nth-child(3) {
     width: 60%;
     height: 60%;
     border-top-color: var(--accent3);
     animation-delay: 0.4s;
   }
   
-  .scene11-center {
-    width: 40px;
-    height: 40px;
+  .scene10-center {
+    width: 35px;
+    height: 35px;
     background: linear-gradient(45deg, var(--accent1), var(--accent2), var(--accent3));
     border-radius: 50%;
     animation: center-pulse 2s ease-in-out infinite;
   }
+
+  /* ============= TEXT STYLES ============= */
+  .scene-text {
+    text-align: center;
+    max-width: 600px;
+  }
   
-  .scene11-text h2 {
-    font-size: 32px;
+  .scene-text h2 {
+    font-size: 28px;
     font-weight: 800;
-    margin: 0 0 10px 0;
-    background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
+    margin: 0 0 12px 0;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 5px 25px rgba(58, 161, 255, 0.4);
-  }
-
-  /* ============= PROGRESS BAR ============= */
-  .progress-container {
-    width: 100%;
-    max-width: 500px;
-    margin-top: 30px;
   }
   
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 12px;
+  .scene-text p {
     color: var(--sub);
     font-size: 16px;
-    font-weight: 500;
+    margin: 0;
+    line-height: 1.6;
   }
-  
-  .progress-bar {
-    width: 100%;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
-    border-radius: 4px;
-    width: 0%;
-    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .progress-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, 
-      transparent, 
-      rgba(255, 255, 255, 0.4), 
-      transparent);
-    animation: progress-shine 2s linear infinite;
-  }
+
+  /* Scene-specific text colors */
+  #scene2 .scene-text h2 { background: linear-gradient(90deg, var(--accent1), var(--accent2)); }
+  #scene3 .scene-text h2 { background: linear-gradient(90deg, var(--accent3), var(--accent1)); }
+  #scene4 .scene-text h2 { background: linear-gradient(90deg, var(--accent2), var(--accent1)); }
+  #scene5 .scene-text h2 { background: linear-gradient(90deg, var(--accent4), var(--accent5)); }
+  #scene6 .scene-text h2 { background: linear-gradient(90deg, var(--accent3), var(--accent1)); }
+  #scene7 .scene-text h2 { background: linear-gradient(90deg, var(--accent1), var(--accent2)); }
+  #scene8 .scene-text h2 { background: linear-gradient(90deg, var(--accent4), var(--accent5)); }
+  #scene9 .scene-text h2 { background: linear-gradient(90deg, var(--accent5), var(--accent1)); }
+  #scene10 .scene-text h2 { background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3)); }
 
   /* ============= BRAND ============= */
   .brand {
     position: fixed;
-    top: 30px;
-    left: 30px;
+    top: 25px;
+    left: 25px;
     display: flex;
     align-items: center;
-    gap: 15px;
-    z-index: 1000;
-    pointer-events: auto;
-  }
-  
-  .logo {
-    filter: none;
+    gap: 12px;
+    z-index: 100;
   }
   
   .logo img {
-    filter: drop-shadow(0 6px 20px rgba(0,0,0,.6));
+    width: 45px;
+    height: 45px;
+    filter: drop-shadow(0 4px 15px rgba(0,0,0,.5));
   }
   
   .brand-text h1 {
     margin: 0;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 900;
     background: linear-gradient(90deg, var(--accent1), var(--accent2));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
   }
   
   .brand-text p {
-    margin: 5px 0 0 0;
+    margin: 3px 0 0 0;
     color: var(--sub);
-    font-size: 13px;
-    letter-spacing: 2px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
   }
 
   /* ============= COMPLETION MESSAGE ============= */
   .completion-message {
     position: fixed;
-    bottom: 80px;
+    bottom: 70px;
     left: 0;
     width: 100%;
     text-align: center;
     color: var(--accent3);
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 1s ease, transform 1s ease;
-    z-index: 1000;
-    text-shadow: 0 0 30px rgba(49, 208, 170, 0.5);
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    z-index: 100;
   }
   
   .completion-message.show {
@@ -801,13 +491,13 @@
   }
   
   @keyframes orbit {
-    0% { transform: translate(-50%, -50%) rotate(0deg) translateX(80px) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg) translateX(80px) rotate(-360deg); }
+    0% { transform: translate(-50%, -50%) rotate(0deg) translateX(70px) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg) translateX(70px) rotate(-360deg); }
   }
   
   @keyframes model-float {
     0%, 100% { transform: translateY(0) rotateX(0deg); }
-    50% { transform: translateY(-20px) rotateX(20deg); }
+    50% { transform: translateY(-15px) rotateX(15deg); }
   }
   
   @keyframes tile-pulse {
@@ -827,8 +517,8 @@
   }
   
   @keyframes window-pulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 15px 40px rgba(49, 208, 170, 0.3); }
-    50% { transform: scale(1.03); box-shadow: 0 20px 50px rgba(49, 208, 170, 0.4); }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
   }
   
   @keyframes loading-bar {
@@ -838,22 +528,17 @@
   
   @keyframes player-spawn {
     0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
-    50% { transform: translateY(-15px) scale(1.1); opacity: 1; }
+    50% { transform: translateY(-12px) scale(1.1); opacity: 1; }
   }
   
   @keyframes weapon-float {
     0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-10px) rotate(5deg); }
+    50% { transform: translateY(-8px) rotate(5deg); }
   }
   
   @keyframes mode-rotate {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-  }
-  
-  @keyframes node-pulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0.8; }
   }
   
   @keyframes ring-rotate {
@@ -862,67 +547,28 @@
   }
   
   @keyframes center-pulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(58, 161, 255, 0.5); }
-    50% { transform: scale(1.1); box-shadow: 0 0 50px rgba(58, 161, 255, 0.8); }
-  }
-  
-  @keyframes final-pulse {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
-  }
-  
-  @keyframes pulse-bg {
-    0% { opacity: 0.3; }
-    100% { opacity: 0.7; }
-  }
-  
-  @keyframes grid-move {
-    0% { background-position: 0 0; }
-    100% { background-position: 60px 60px; }
-  }
-  
-  @keyframes rotate-bg {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  @keyframes progress-shine {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
   }
 
   /* ============= RESPONSIVE ============= */
   @media (max-width: 768px) {
     .scene-content {
-      gap: 30px;
+      gap: 40px;
+      max-width: 500px;
     }
     
-    .scene1-loader,
-    .scene2-loader,
-    .scene3-loader,
-    .scene4-loader,
-    .scene5-loader,
-    .scene6-loader,
-    .scene7-loader,
-    .scene8-loader,
-    .scene9-loader,
-    .scene10-loader,
-    .scene11-loader {
-      transform: scale(0.8);
+    .loader-wrapper {
+      width: 150px;
+      height: 150px;
     }
     
-    .scene1-text h2,
-    .scene2-text h2,
-    .scene3-text h2,
-    .scene4-text h2,
-    .scene5-text h2,
-    .scene6-text h2,
-    .scene7-text h2,
-    .scene8-text h2,
-    .scene9-text h2,
-    .scene10-text h2,
-    .scene11-text h2 {
-      font-size: 26px;
+    .scene-text h2 {
+      font-size: 24px;
+    }
+    
+    .scene-text p {
+      font-size: 14px;
     }
     
     .brand {
@@ -930,46 +576,56 @@
       left: 20px;
     }
     
-    .logo {
-      width: 45px;
-      height: 45px;
+    .logo img {
+      width: 40px;
+      height: 40px;
     }
     
     .brand-text h1 {
-      font-size: 20px;
-    }
-    
-    .brand-text p {
-      font-size: 11px;
+      font-size: 18px;
     }
     
     .completion-message {
       font-size: 18px;
-      bottom: 60px;
-    }
-    
-    .progress-container {
-      max-width: 350px;
+      bottom: 50px;
     }
   }
 
   @media (max-width: 480px) {
-    .scene1-loader,
-    .scene2-loader,
-    .scene3-loader,
-    .scene4-loader,
-    .scene5-loader,
-    .scene6-loader,
-    .scene7-loader,
-    .scene8-loader,
-    .scene9-loader,
-    .scene10-loader,
-    .scene11-loader {
-      transform: scale(0.7);
+    .scene-content {
+      gap: 30px;
     }
     
-    .progress-container {
-      max-width: 280px;
+    .loader-wrapper {
+      width: 130px;
+      height: 130px;
+    }
+    
+    .scene-text h2 {
+      font-size: 22px;
+    }
+    
+    .scene-text p {
+      font-size: 13px;
+    }
+    
+    .brand {
+      top: 15px;
+      left: 15px;
+      gap: 10px;
+    }
+    
+    .logo img {
+      width: 35px;
+      height: 35px;
+    }
+    
+    .brand-text h1 {
+      font-size: 16px;
+    }
+    
+    .brand-text p {
+      font-size: 10px;
     }
   }
   </style>
@@ -987,271 +643,144 @@
   </div>
 
   <!-- SCENE 1: ИНИЦИАЛИЗАЦИЯ -->
-  <div id="scene1" class="scene-container active">
-    <div class="scene1-bg"></div>
+  <div id="scene1" class="scene-container scene1-bg active">
     <div class="scene-content">
-      <div class="scene1-loader">
+      <div class="loader-wrapper">
         <div class="scene1-core"></div>
         <div class="scene1-orb"></div>
       </div>
-      <div class="scene1-text">
+      <div class="scene-text">
         <h2>ИНИЦИАЛИЗАЦИЯ ЯДРА</h2>
         <p>Загрузка основных систем сервера</p>
-      </div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span>Прогресс загрузки</span>
-          <span id="progress-percent">8%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill" style="width: 8%"></div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- SCENE 2: МОДЕЛИ -->
-  <div id="scene2" class="scene-container">
-    <div class="scene2-bg"></div>
+  <div id="scene2" class="scene-container scene2-bg">
     <div class="scene-content">
-      <div class="scene2-loader">
+      <div class="loader-wrapper">
         <div class="scene2-model"></div>
         <div class="scene2-model"></div>
         <div class="scene2-model"></div>
       </div>
-      <div class="scene2-text">
+      <div class="scene-text">
         <h2>ЗАГРУЗКА МОДЕЛЕЙ</h2>
         <p>Оптимизация 3D-моделей персонажей и транспорта</p>
-      </div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span>Прогресс загрузки</span>
-          <span id="progress-percent-2">17%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill-2" style="width: 17%"></div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- SCENE 3: ТЕКСТУРЫ -->
-  <div id="scene3" class="scene-container">
-    <div class="scene3-bg"></div>
+  <div id="scene3" class="scene-container scene3-bg">
     <div class="scene-content">
-      <div class="scene3-loader">
+      <div class="loader-wrapper scene3-loader">
         <div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div>
         <div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div>
         <div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div>
         <div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div>
       </div>
-      <div class="scene3-text">
+      <div class="scene-text">
         <h2>КОМПИЛЯЦИЯ ТЕКСТУР</h2>
         <p>Загрузка PNG и VTF материалов</p>
-      </div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span>Прогресс загрузки</span>
-          <span id="progress-percent-3">25%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill-3" style="width: 25%"></div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- SCENE 4: АУДИО -->
-  <div id="scene4" class="scene-container">
-    <div class="scene4-bg"></div>
+  <div id="scene4" class="scene-container scene4-bg">
     <div class="scene-content">
-      <div class="scene4-loader">
+      <div class="loader-wrapper scene4-loader">
         <div class="scene4-wave"></div><div class="scene4-wave"></div><div class="scene4-wave"></div>
         <div class="scene4-wave"></div><div class="scene4-wave"></div><div class="scene4-wave"></div>
         <div class="scene4-wave"></div><div class="scene4-wave"></div><div class="scene4-wave"></div>
       </div>
-      <div class="scene4-text">
+      <div class="scene-text">
         <h2>ИНИЦИАЛИЗАЦИЯ АУДИО</h2>
         <p>Загрузка звуковых библиотек и эффектов</p>
-      </div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span>Прогресс загрузки</span>
-          <span id="progress-percent-4">33%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill-4" style="width: 33%"></div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- SCENE 5: СКРИПТЫ -->
-  <div id="scene5" class="scene-container">
-    <div class="scene5-bg"></div>
+  <div id="scene5" class="scene-container scene5-bg">
     <div class="scene-content">
-      <div class="scene5-loader">
+      <div class="loader-wrapper">
         <div class="scene5-code">if SERVER then return end</div>
       </div>
-      <div class="scene5-text">
+      <div class="scene-text">
         <h2>КОМПИЛЯЦИЯ СКРИПТОВ</h2>
         <p>Загрузка CL, SV и SH скриптов</p>
-      </div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span>Прогресс загрузки</span>
-          <span id="progress-percent-5">42%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill-5" style="width: 42%"></div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- SCENE 6: МАТЕРИАЛЫ -->
-  <div id="scene6" class="scene-container">
-    <div class="scene6-bg"></div>
+  <div id="scene6" class="scene-container scene6-bg">
     <div class="scene-content">
-      <div class="scene6-loader"></div>
-      <div class="scene6-text">
+      <div class="loader-wrapper scene6-loader"></div>
+      <div class="scene-text">
         <h2>ЗАГРУЗКА МАТЕРИАЛОВ</h2>
         <p>Компиляция VTF и PNG текстур</p>
-      </div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span>Прогресс загрузки</span>
-          <span id="progress-percent-6">50%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill-6" style="width: 50%"></div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- SCENE 7: ИГРОКИ -->
-  <div id="scene7" class="scene-container">
-    <div class="scene7-bg"></div>
+  <div id="scene7" class="scene-container scene7-bg">
     <div class="scene-content">
-      <div class="scene7-loader">
+      <div class="loader-wrapper scene7-loader">
         <div class="scene7-player"></div>
         <div class="scene7-player"></div>
         <div class="scene7-player"></div>
         <div class="scene7-player"></div>
       </div>
-      <div class="scene7-text">
+      <div class="scene-text">
         <h2>ЗАГРУЗКА ИГРОКОВ</h2>
         <p>Инициализация системы игроков</p>
-      </div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span>Прогресс загрузки</span>
-          <span id="progress-percent-7">58%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill-7" style="width: 58%"></div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- SCENE 8: ОРУЖИЕ -->
-  <div id="scene8" class="scene-container">
-    <div class="scene8-bg"></div>
+  <div id="scene8" class="scene-container scene8-bg">
     <div class="scene-content">
-      <div class="scene8-loader">
+      <div class="loader-wrapper scene8-loader">
         <div class="scene8-weapon"></div>
         <div class="scene8-weapon"></div>
       </div>
-      <div class="scene8-text">
+      <div class="scene-text">
         <h2>ЗАГРУЗКА ОРУЖИЯ</h2>
         <p>Инициализация оружейной системы</p>
-      </div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span>Прогресс загрузки</span>
-          <span id="progress-percent-8">67%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill-8" style="width: 67%"></div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- SCENE 9: РЕЖИМ ИГРЫ -->
-  <div id="scene9" class="scene-container">
-    <div class="scene9-bg"></div>
+  <div id="scene9" class="scene-container scene9-bg">
     <div class="scene-content">
-      <div class="scene9-loader">
+      <div class="loader-wrapper scene9-loader">
         <div class="scene9-mode"></div>
       </div>
-      <div class="scene9-text">
+      <div class="scene-text">
         <h2>ЗАГРУЗКА РЕЖИМА</h2>
         <p>Инициализация игрового режима DARK RP</p>
-      </div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span>Прогресс загрузки</span>
-          <span id="progress-percent-9">75%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill-9" style="width: 75%"></div>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- SCENE 10: СЕТЬ -->
-  <!-- <div id="scene10" class="scene-container"> -->
-    <!-- <div class="scene10-bg"></div> -->
-    <!-- <div class="scene-content"> -->
-      <!-- <div class="scene10-loader"> -->
-        <!-- <div class="scene10-node"></div> -->
-        <!-- <div class="scene10-node"></div> -->
-        <!-- <div class="scene10-node"></div> -->
-        <!-- <div class="scene10-node"></div> -->
-        <!-- <div class="scene10-node"></div> -->
-      <!-- </div> -->
-      <!-- <div class="scene10-text"> -->
-        <!-- <h2>СИНХРОНИЗАЦИЯ СЕТИ</h2> -->
-        <!-- <p>Установка соединения с сервером</p> -->
-      <!-- </div> -->
-      <!-- <div class="progress-container"> -->
-        <!-- <div class="progress-label"> -->
-          <!-- <span>Прогресс загрузки</span> -->
-          <!-- <span id="progress-percent-10">83%</span> -->
-        <!-- </div> -->
-        <!-- <div class="progress-bar"> -->
-          <!-- <div class="progress-fill" id="progress-fill-10" style="width: 83%"></div> -->
-        <!-- </div> -->
-      <!-- </div> -->
-    <!-- </div> -->
-  <!-- </div> -->
-
-  <!-- SCENE 11: ФИНАЛИЗАЦИЯ -->
-  <div id="scene11" class="scene-container">
-    <div class="scene11-bg"></div>
+  <!-- SCENE 10: ФИНАЛИЗАЦИЯ -->
+  <div id="scene10" class="scene-container scene10-bg">
     <div class="scene-content">
-      <div class="scene11-loader">
-        <div class="scene11-ring"></div>
-        <div class="scene11-ring"></div>
-        <div class="scene11-ring"></div>
-        <div class="scene11-center"></div>
+      <div class="loader-wrapper scene10-loader">
+        <div class="scene10-ring"></div>
+        <div class="scene10-ring"></div>
+        <div class="scene10-ring"></div>
+        <div class="scene10-center"></div>
       </div>
-      <div class="scene11-text">
+      <div class="scene-text">
         <h2>ФИНАЛИЗАЦИЯ ЗАГРУЗКИ</h2>
         <p>Проверка целостности и оптимизация</p>
-      </div>
-      <div class="progress-container">
-        <div class="progress-label">
-          <span>Прогресс загрузки</span>
-          <span id="progress-percent-11">92%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill-11" style="width: 92%"></div>
-        </div>
       </div>
     </div>
   </div>
@@ -1264,110 +793,36 @@
   <script>
     (function(){
       const scenes = [
-        { id: 'scene1', percent: '8%', progress: 8 },
-        { id: 'scene2', percent: '17%', progress: 17 },
-        { id: 'scene3', percent: '25%', progress: 25 },
-        { id: 'scene4', percent: '33%', progress: 33 },
-        { id: 'scene5', percent: '42%', progress: 42 },
-        { id: 'scene6', percent: '50%', progress: 50 },
-        { id: 'scene7', percent: '58%', progress: 58 },
-        { id: 'scene8', percent: '67%', progress: 67 },
-        { id: 'scene9', percent: '75%', progress: 75 },
-        <!-- { id: 'scene10', percent: '83%', progress: 83 }, -->
-        { id: 'scene11', percent: '92%', progress: 92 }
+        'scene1', 'scene2', 'scene3', 'scene4', 'scene5',
+        'scene6', 'scene7', 'scene8', 'scene9', 'scene10'
       ];
       
-      const sceneElements = scenes.map(scene => document.getElementById(scene.id));
+      const sceneElements = scenes.map(id => document.getElementById(id));
       let currentSceneIndex = 0;
       let switchInterval;
       let isCompleted = false;
-      let currentSwitchTime = 4000; // 4 секунды на сцену
-      
-      // Создание соединений для сцены сети
-      function createNetworkConnections() {
-        const scene10Loader = document.querySelector('#scene10 .scene10-loader');
-        const nodes = scene10Loader.querySelectorAll('.scene10-node');
-        const connections = scene10Loader.querySelectorAll('.scene10-connection');
-        
-        // Удаляем старые соединения
-        connections.forEach(conn => conn.remove());
-        
-        // Создаем новые соединения между всеми узлами и центральным
-        nodes.forEach((node1, i) => {
-          nodes.forEach((node2, j) => {
-            if (i < j) {
-              const rect1 = node1.getBoundingClientRect();
-              const rect2 = node2.getBoundingClientRect();
-              
-              const x1 = rect1.left + rect1.width / 2;
-              const y1 = rect1.top + rect1.height / 2;
-              const x2 = rect2.left + rect2.width / 2;
-              const y2 = rect2.top + rect2.height / 2;
-              
-              const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-              const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-              
-              const connection = document.createElement('div');
-              connection.className = 'scene10-connection';
-              connection.style.width = `${length}px`;
-              connection.style.top = `${y1}px`;
-              connection.style.left = `${x1}px`;
-              connection.style.transform = `rotate(${angle}deg)`;
-              connection.style.opacity = '0.3';
-              
-              scene10Loader.appendChild(connection);
-            }
-          });
-        });
-      }
+      const sceneDuration = 3500; // 3.5 секунды на каждую сцену
       
       // Функция переключения сцены
       function nextScene() {
         if (isCompleted) return;
         
+        // Скрываем текущую сцену
+        sceneElements[currentSceneIndex].classList.remove('active');
+        
+        // Проверяем, если это последняя сцена
         if (currentSceneIndex === scenes.length - 1) {
           completeLoading();
           return;
         }
         
-        sceneElements[currentSceneIndex].classList.remove('active');
+        // Переходим к следующей сцене
         currentSceneIndex++;
-        sceneElements[currentSceneIndex].classList.add('active');
         
-        // Если это сцена сети, создаем соединения
-        if (currentSceneIndex === 9) { // scene10
-          setTimeout(() => {
-            createNetworkConnections();
-            // Анимация пульсации соединений
-            const connections = document.querySelectorAll('.scene10-connection');
-            connections.forEach((conn, i) => {
-              conn.style.animation = `pulse-bg ${1 + i * 0.1}s ease-in-out infinite alternate`;
-            });
-          }, 100);
-        }
-        
-        updateProgress();
-      }
-      
-      // Обновление прогресса
-      function updateProgress() {
-        const currentProgress = scenes[currentSceneIndex].progress;
-        
-        scenes.forEach((scene, index) => {
-          const sceneNum = index + 1;
-          const percentElement = document.getElementById(`progress-percent${sceneNum === 1 ? '' : '-' + sceneNum}`);
-          const fillElement = document.getElementById(`progress-fill${sceneNum === 1 ? '' : '-' + sceneNum}`);
-          
-          if (percentElement && fillElement) {
-            if (index <= currentSceneIndex) {
-              percentElement.textContent = scene.percent;
-              fillElement.style.width = `${scene.progress}%`;
-            } else {
-              percentElement.textContent = `${currentProgress}%`;
-              fillElement.style.width = `${currentProgress}%`;
-            }
-          }
-        });
+        // Показываем следующую сцену с небольшой задержкой для плавности
+        setTimeout(() => {
+          sceneElements[currentSceneIndex].classList.add('active');
+        }, 300);
       }
       
       // Завершение загрузки
@@ -1378,68 +833,52 @@
           clearInterval(switchInterval);
         }
         
-        // Анимация завершения
-        scenes[scenes.length - 1].progress = 100;
-        scenes[scenes.length - 1].percent = '100%';
-        updateProgress();
-        
-        // Плавное заполнение до 100%
-        const finalFill = document.getElementById('progress-fill-11');
-        if (finalFill) {
-          setTimeout(() => {
-            finalFill.style.width = '100%';
-            document.getElementById('progress-percent-11').textContent = '100%';
-          }, 500);
-        }
-        
-        // Показать сообщение
+        // Показываем финальное сообщение
         setTimeout(() => {
           document.getElementById('completion-message').classList.add('show');
-        }, 1000);
+        }, 800);
         
-        // Перенаправление через 4 секунды
+        // Перенаправление через 3 секунды
         setTimeout(() => {
           console.log('Загрузка завершена, подключение к серверу...');
-          // window.location.href = 'game.html';
-        }, 4000);
+          // window.location.href = 'game.html'; // Раскомментировать для реального перенаправления
+        }, 3000);
+      }
+      
+      // Автопереключение сцен
+      function startSceneSwitching() {
+        switchInterval = setInterval(() => {
+          nextScene();
+        }, sceneDuration);
       }
       
       // Инициализация
-      updateProgress();
-      
-      // Автопереключение сцен
-      function scheduleNextScene() {
-        if (!isCompleted) {
-          switchInterval = setTimeout(() => {
-            nextScene();
-            scheduleNextScene();
-          }, currentSwitchTime);
-        }
-      }
-      
-      scheduleNextScene();
+      startSceneSwitching();
       
       // Ручное переключение пробелом
       document.addEventListener('keydown', (e) => {
         if (e.code === 'Space' && !isCompleted) {
           nextScene();
           if (switchInterval) {
-            clearTimeout(switchInterval);
-            scheduleNextScene();
+            clearInterval(switchInterval);
+            startSceneSwitching();
           }
         }
       });
       
-      // Запрет контекстного меню и drag
-      document.addEventListener("contextmenu", e => e.preventDefault());
-      document.addEventListener("dragstart", e => e.preventDefault());
-      
-      // Адаптация сетевых соединений при изменении размера окна
-      window.addEventListener('resize', () => {
-        if (currentSceneIndex === 9) {
-          createNetworkConnections();
+      // Клик для переключения (для мобильных устройств)
+      document.addEventListener('click', (e) => {
+        if (!isCompleted) {
+          nextScene();
+          if (switchInterval) {
+            clearInterval(switchInterval);
+            startSceneSwitching();
+          }
         }
       });
+      
+      // Запрет контекстного меню
+      document.addEventListener("contextmenu", e => e.preventDefault());
     })();
   </script>
 </body>
