@@ -1,885 +1,455 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BLRP — Загрузка сервера</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-  <style>
-  /* ============= variables & base ============= */
-  :root{
-    --bg0:#0a0f16;
-    --bg1:#0e1521;
-    --accent1:#3aa1ff;
-    --accent2:#7c5cff;
-    --accent3:#31d0aa;
-    --accent4:#ff4757;
-    --accent5:#ffa502;
-    --text:#e7eef7;
-    --sub:#a6b3c6;
-    --muted:#92a6c0;
-    --glow: 0 0 30px currentColor;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  html,body{height:100%;}
-  body{
-    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, "Helvetica Neue", sans-serif;
-    color:var(--text);
-    overflow:hidden;
-    user-select:none;
-    cursor:default;
-    background: var(--bg0);
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockLife RP - Loading</title>
+    <style>
+        /* --- RESET & BASE --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-  /* ============= SCENE CONTAINER ============= */
-  .scene-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-    padding: 20px;
-    pointer-events: none;
-  }
-  
-  .scene-container.active {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-  }
-  
-  .scene-content {
-    width: 100%;
-    max-width: 700px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 50px;
-  }
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #0a0f16;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #e7eef7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-  /* ============= LOADER ANIMATIONS ============= */
-  .loader-wrapper {
-    position: relative;
-    width: 180px;
-    height: 180px;
-  }
+        /* --- BACKGROUND LAYERS --- */
+        .bg-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
 
-  /* Scene 1: Инициализация */
-  .scene1-bg {
-    background: linear-gradient(135deg, #0a0f16 0%, #0d1b2a 100%);
-  }
-  
-  .scene1-core {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    background: conic-gradient(from 0deg, var(--accent1), var(--accent2), var(--accent3), var(--accent1));
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation: rotate-core 4s linear infinite;
-    box-shadow: 0 0 40px var(--accent1);
-  }
-  
-  .scene1-orb {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    background: var(--accent2);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(0deg) translateX(70px);
-    animation: orbit 3s linear infinite;
-  }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/main.png');
+            background-size: cover;
+            background-position: center;
+            /* Processing: Blur, Brightness, Contrast */
+            filter: blur(35px) brightness(0.45) contrast(1.2);
+            transform: scale(1.1); /* Prevent blurred edges */
+        }
 
-  /* Scene 2: Модели */
-  .scene2-bg {
-    background: linear-gradient(135deg, #0d1218 0%, #1a2a3a 100%);
-  }
-  
-  .scene2-model {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(45deg, var(--accent1), var(--accent2));
-    border-radius: 6px;
-    animation: model-float 2s ease-in-out infinite;
-  }
-  
-  .scene2-model:nth-child(1) { 
-    top: 20px; 
-    left: 30px; 
-    animation-delay: 0s;
-  }
-  
-  .scene2-model:nth-child(2) { 
-    top: 60px; 
-    left: 80px; 
-    animation-delay: 0.3s;
-    background: linear-gradient(45deg, var(--accent2), var(--accent3));
-  }
-  
-  .scene2-model:nth-child(3) { 
-    top: 100px; 
-    left: 130px; 
-    animation-delay: 0.6s;
-    background: linear-gradient(45deg, var(--accent3), var(--accent1));
-  }
+        .bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Gradient Mask: Darkens bottom, subtle vignette */
+            background: 
+                linear-gradient(to bottom, rgba(10, 15, 22, 0.4) 0%, rgba(10, 15, 22, 0.8) 100%),
+                radial-gradient(circle at 50% 50%, rgba(58, 161, 255, 0.1) 0%, rgba(10, 15, 22, 0) 60%);
+            z-index: 1;
+        }
 
-  /* Scene 3: Текстуры */
-  .scene3-bg {
-    background: linear-gradient(135deg, #151f2a 0%, #0a1418 100%);
-  }
-  
-  .scene3-loader {
-    width: 160px;
-    height: 160px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap: 5px;
-  }
-  
-  .scene3-tile {
-    background: linear-gradient(135deg, var(--accent3), var(--accent1));
-    border-radius: 2px;
-    opacity: 0.4;
-    animation: tile-pulse 1.5s ease-in-out infinite;
-  }
-  
-  .scene3-tile:nth-child(odd) { animation-delay: 0.5s; }
+        .bg-noise {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.08;
+            mix-blend-mode: soft-light;
+            z-index: 2;
+            pointer-events: none;
+        }
 
-  /* Scene 4: Аудио */
-  .scene4-bg {
-    background: linear-gradient(135deg, #1a1820 0%, #0d0a14 100%);
-  }
-  
-  .scene4-loader {
-    width: 200px;
-    height: 120px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: 5px;
-  }
-  
-  .scene4-wave {
-    width: 8px;
-    background: linear-gradient(to top, var(--accent2), var(--accent1), var(--accent3));
-    border-radius: 4px;
-    animation: sound-wave 1.2s ease-in-out infinite;
-  }
-  
-  .scene4-wave:nth-child(1) { height: 35px; animation-delay: 0.1s; }
-  .scene4-wave:nth-child(2) { height: 60px; animation-delay: 0.2s; }
-  .scene4-wave:nth-child(3) { height: 85px; animation-delay: 0.3s; }
-  .scene4-wave:nth-child(4) { height: 100px; animation-delay: 0.4s; }
-  .scene4-wave:nth-child(5) { height: 120px; animation-delay: 0.5s; }
-  .scene4-wave:nth-child(6) { height: 100px; animation-delay: 0.6s; }
-  .scene4-wave:nth-child(7) { height: 85px; animation-delay: 0.7s; }
-  .scene4-wave:nth-child(8) { height: 60px; animation-delay: 0.8s; }
-  .scene4-wave:nth-child(9) { height: 35px; animation-delay: 0.9s; }
+        /* --- NEON ORBS (ANIMATED) --- */
+        .orbs-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.6;
+            mix-blend-mode: screen;
+        }
 
-  /* Scene 5: Скрипты */
-  .scene5-bg {
-    background: linear-gradient(135deg, #0f1720 0%, #1a1a2a 100%);
-  }
-  
-  .scene5-code {
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    color: var(--accent4);
-    letter-spacing: 2px;
-    text-shadow: 0 0 20px var(--accent4);
-    animation: code-typing 3s steps(40) infinite;
-    white-space: nowrap;
-    overflow: hidden;
-    border-right: 2px solid var(--accent4);
-  }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            animation: floatOrb 35s infinite ease-in-out alternate;
+        }
 
-  /* Scene 6: Материалы */
-  .scene6-bg {
-    background: linear-gradient(135deg, #0f1720 0%, #1a2a3a 100%);
-  }
-  
-  .scene6-loader {
-    width: 180px;
-    height: 120px;
-    background: rgba(15, 23, 32, 0.8);
-    border: 2px solid var(--accent3);
-    border-radius: 10px;
-    position: relative;
-    overflow: hidden;
-    animation: window-pulse 2.5s ease-in-out infinite;
-  }
-  
-  .scene6-loader::before {
-    content: 'VTF';
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    color: var(--accent3);
-    font-family: 'Courier New', monospace;
-    font-size: 12px;
-    font-weight: bold;
-  }
-  
-  .scene6-loader::after {
-    content: '';
-    position: absolute;
-    top: 50px;
-    left: 10px;
-    right: 10px;
-    height: 50px;
-    background: linear-gradient(90deg, 
-      transparent 0%, 
-      rgba(49, 208, 170, 0.4) 25%,
-      rgba(49, 208, 170, 0.4) 75%,
-      transparent 100%);
-    border-radius: 4px;
-    animation: loading-bar 1.8s ease-in-out infinite;
-  }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: #3aa1ff; /* Blue */
+            top: 20%;
+            left: 20%;
+            animation-delay: 0s;
+        }
 
-  /* Scene 7: Игроки */
-  .scene7-bg {
-    background: linear-gradient(135deg, #1a2832 0%, #0a1418 100%);
-  }
-  
-  .scene7-loader {
-    width: 180px;
-    height: 100px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .scene7-player {
-    position: absolute;
-    width: 35px;
-    height: 35px;
-    background: linear-gradient(45deg, var(--accent1), var(--accent2));
-    border-radius: 50%;
-    animation: player-spawn 2s ease-in-out infinite;
-  }
-  
-  .scene7-player:nth-child(1) { left: 30px; animation-delay: 0s; }
-  .scene7-player:nth-child(2) { left: 70px; animation-delay: 0.2s; }
-  .scene7-player:nth-child(3) { left: 110px; animation-delay: 0.4s; }
-  .scene7-player:nth-child(4) { left: 150px; animation-delay: 0.6s; }
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: #7c5cff; /* Purple */
+            bottom: 10%;
+            right: 15%;
+            animation-delay: -5s;
+        }
 
-  /* Scene 8: Оружие */
-  .scene8-bg {
-    background: linear-gradient(135deg, #2a1a3a 0%, #0d0a14 100%);
-  }
-  
-  .scene8-loader {
-    width: 200px;
-    height: 80px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .scene8-weapon {
-    position: absolute;
-    width: 70px;
-    height: 18px;
-    background: linear-gradient(90deg, var(--accent4), var(--accent5));
-    border-radius: 4px;
-    animation: weapon-float 2s ease-in-out infinite;
-  }
-  
-  .scene8-weapon:nth-child(1) { 
-    top: 15px; 
-    left: 25px; 
-    animation-delay: 0s;
-    transform: rotate(15deg);
-  }
-  
-  .scene8-weapon:nth-child(2) { 
-    top: 50px; 
-    left: 100px; 
-    animation-delay: 0.3s;
-    transform: rotate(-15deg);
-    background: linear-gradient(90deg, var(--accent5), var(--accent4));
-  }
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: #31d0aa; /* Teal */
+            top: 60%;
+            left: 10%;
+            animation-delay: -10s;
+        }
 
-  /* Scene 9: Режим игры */
-  .scene9-bg {
-    background: linear-gradient(135deg, #0a1820 0%, #1a2a32 100%);
-  }
-  
-  .scene9-loader {
-    width: 180px;
-    height: 120px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .scene9-mode {
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(45deg, var(--accent5), var(--accent1));
-    border-radius: 8px;
-    animation: mode-rotate 3s linear infinite;
-  }
-  
-  .scene9-mode::before {
-    content: 'RP';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-weight: bold;
-    font-family: 'Orbitron', sans-serif;
-  }
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -20px) scale(1.1); }
+            100% { transform: translate(-20px, 20px) scale(0.95); }
+        }
 
-  /* Scene 10: Финализация */
-  .scene10-bg {
-    background: linear-gradient(135deg, #0a0f16 0%, #0d1b2a 100%);
-  }
-  
-  .scene10-loader {
-    width: 200px;
-    height: 200px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .scene10-ring {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border: 2px solid transparent;
-    border-top-color: var(--accent1);
-    border-radius: 50%;
-    animation: ring-rotate 3s linear infinite;
-  }
-  
-  .scene10-ring:nth-child(2) {
-    width: 80%;
-    height: 80%;
-    border-top-color: var(--accent2);
-    animation-delay: 0.2s;
-  }
-  
-  .scene10-ring:nth-child(3) {
-    width: 60%;
-    height: 60%;
-    border-top-color: var(--accent3);
-    animation-delay: 0.4s;
-  }
-  
-  .scene10-center {
-    width: 35px;
-    height: 35px;
-    background: linear-gradient(45deg, var(--accent1), var(--accent2), var(--accent3));
-    border-radius: 50%;
-    animation: center-pulse 2s ease-in-out infinite;
-  }
+        /* --- UI LAYER --- */
+        .ui-layer {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 60px;
+        }
 
-  /* ============= TEXT STYLES ============= */
-  .scene-text {
-    text-align: center;
-    max-width: 600px;
-  }
-  
-  .scene-text h2 {
-    font-size: 28px;
-    font-weight: 800;
-    margin: 0 0 12px 0;
-    background: linear-gradient(90deg, var(--accent1), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  
-  .scene-text p {
-    color: var(--sub);
-    font-size: 16px;
-    margin: 0;
-    line-height: 1.6;
-  }
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
-  /* Scene-specific text colors */
-  #scene2 .scene-text h2 { background: linear-gradient(90deg, var(--accent1), var(--accent2)); }
-  #scene3 .scene-text h2 { background: linear-gradient(90deg, var(--accent3), var(--accent1)); }
-  #scene4 .scene-text h2 { background: linear-gradient(90deg, var(--accent2), var(--accent1)); }
-  #scene5 .scene-text h2 { background: linear-gradient(90deg, var(--accent4), var(--accent5)); }
-  #scene6 .scene-text h2 { background: linear-gradient(90deg, var(--accent3), var(--accent1)); }
-  #scene7 .scene-text h2 { background: linear-gradient(90deg, var(--accent1), var(--accent2)); }
-  #scene8 .scene-text h2 { background: linear-gradient(90deg, var(--accent4), var(--accent5)); }
-  #scene9 .scene-text h2 { background: linear-gradient(90deg, var(--accent5), var(--accent1)); }
-  #scene10 .scene-text h2 { background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3)); }
+        .logo-img {
+            height: 40px;
+            width: 40px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(49, 208, 170, 0.5));
+        }
 
-  /* ============= BRAND ============= */
-  .brand {
-    position: fixed;
-    top: 25px;
-    left: 25px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    z-index: 100;
-  }
-  
-  .logo img {
-    width: 45px;
-    height: 45px;
-    filter: drop-shadow(0 4px 15px rgba(0,0,0,.5));
-  }
-  
-  .brand-text h1 {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 900;
-    background: linear-gradient(90deg, var(--accent1), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 0.5px;
-  }
-  
-  .brand-text p {
-    margin: 3px 0 0 0;
-    color: var(--sub);
-    font-size: 11px;
-    letter-spacing: 1.5px;
-  }
+        .branding {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
 
-  /* ============= COMPLETION MESSAGE ============= */
-  .completion-message {
-    position: fixed;
-    bottom: 70px;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    color: var(--accent3);
-    font-size: 20px;
-    font-weight: 700;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-    z-index: 100;
-  }
-  
-  .completion-message.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
+        .branding h1 {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #3aa1ff 0%, #7c5cff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(60, 120, 255, 0.3));
+        }
 
-  /* ============= KEYFRAMES ============= */
-  @keyframes rotate-core {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
-  }
-  
-  @keyframes orbit {
-    0% { transform: translate(-50%, -50%) rotate(0deg) translateX(70px) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg) translateX(70px) rotate(-360deg); }
-  }
-  
-  @keyframes model-float {
-    0%, 100% { transform: translateY(0) rotateX(0deg); }
-    50% { transform: translateY(-15px) rotateX(15deg); }
-  }
-  
-  @keyframes tile-pulse {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.05); }
-  }
-  
-  @keyframes sound-wave {
-    0%, 100% { transform: scaleY(0.6); opacity: 0.5; }
-    50% { transform: scaleY(1.3); opacity: 1; }
-  }
-  
-  @keyframes code-typing {
-    0% { width: 0; }
-    50% { width: 100%; }
-    100% { width: 100%; }
-  }
-  
-  @keyframes window-pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-  }
-  
-  @keyframes loading-bar {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
-  
-  @keyframes player-spawn {
-    0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
-    50% { transform: translateY(-12px) scale(1.1); opacity: 1; }
-  }
-  
-  @keyframes weapon-float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-8px) rotate(5deg); }
-  }
-  
-  @keyframes mode-rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  @keyframes ring-rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  @keyframes center-pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-  }
+        .branding span {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #92a6c0;
+            margin-top: 4px;
+        }
 
-  /* ============= RESPONSIVE ============= */
-  @media (max-width: 768px) {
-    .scene-content {
-      gap: 40px;
-      max-width: 500px;
-    }
-    
-    .loader-wrapper {
-      width: 150px;
-      height: 150px;
-    }
-    
-    .scene-text h2 {
-      font-size: 24px;
-    }
-    
-    .scene-text p {
-      font-size: 14px;
-    }
-    
-    .brand {
-      top: 20px;
-      left: 20px;
-    }
-    
-    .logo img {
-      width: 40px;
-      height: 40px;
-    }
-    
-    .brand-text h1 {
-      font-size: 18px;
-    }
-    
-    .completion-message {
-      font-size: 18px;
-      bottom: 50px;
-    }
-  }
+        /* Center Loader */
+        .loader-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
 
-  @media (max-width: 480px) {
-    .scene-content {
-      gap: 30px;
-    }
-    
-    .loader-wrapper {
-      width: 130px;
-      height: 130px;
-    }
-    
-    .scene-text h2 {
-      font-size: 22px;
-    }
-    
-    .scene-text p {
-      font-size: 13px;
-    }
-    
-    .brand {
-      top: 15px;
-      left: 15px;
-      gap: 10px;
-    }
-    
-    .logo img {
-      width: 35px;
-      height: 35px;
-    }
-    
-    .brand-text h1 {
-      font-size: 16px;
-    }
-    
-    .brand-text p {
-      font-size: 10px;
-    }
-  }
-  </style>
+        /* Radar/Ring Loader */
+        .radar-loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .radar-loader svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .radar-track {
+            fill: none;
+            stroke: rgba(231, 238, 247, 0.05);
+            stroke-width: 1;
+        }
+
+        .radar-track-dashed {
+            fill: none;
+            stroke: rgba(49, 208, 170, 0.2);
+            stroke-width: 1;
+            stroke-dasharray: 2 4;
+        }
+
+        .radar-progress {
+            fill: none;
+            stroke: #31d0aa;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-dasharray: 180; /* Circumference approx */
+            stroke-dashoffset: 180;
+            filter: drop-shadow(0 0 6px rgba(49, 208, 170, 0.6));
+            animation: radarSpin 2.5s linear infinite;
+        }
+
+        .radar-core {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #31d0aa;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #31d0aa;
+            opacity: 0.8;
+        }
+
+        @keyframes radarSpin {
+            0% { stroke-dashoffset: 180; transform: rotate(0deg); }
+            50% { stroke-dashoffset: 0; }
+            100% { stroke-dashoffset: -180; transform: rotate(360deg); }
+        }
+
+        /* Status Text */
+        .status-group {
+            text-align: center;
+            min-height: 60px; /* Prevent layout shift */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #e7eef7;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeText 4s infinite; /* Synced with JS logic */
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .hint-text {
+            font-size: 11px;
+            color: #5c6b7f;
+            margin-top: 8px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: none;
+        }
+
+        @keyframes fadeText {
+            0% { opacity: 0; transform: translateY(5px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-5px); }
+        }
+
+        /* Footer / Progress Bar */
+        .footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3aa1ff, #31d0aa);
+            box-shadow: 0 0 10px rgba(49, 208, 170, 0.5);
+            transition: width 0.3s ease-out;
+        }
+
+        .server-info {
+            font-size: 10px;
+            color: #5c6b7f;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* --- UTILS --- */
+        .hidden { display: none; }
+
+    </style>
 </head>
 <body>
-  <!-- BRAND -->
-  <div class="brand">
-    <div class="logo">
-      <img src="assets/logo.png" alt="BLRP">
-    </div>
-    <div class="brand-text">
-      <h1>BLOCKLIFE RP</h1>
-      <p>DARK ROLEPLAY</p>
-    </div>
-  </div>
 
-  <!-- SCENE 1: ИНИЦИАЛИЗАЦИЯ -->
-  <div id="scene1" class="scene-container scene1-bg active">
-    <div class="scene-content">
-      <div class="loader-wrapper">
-        <div class="scene1-core"></div>
-        <div class="scene1-orb"></div>
-      </div>
-      <div class="scene-text">
-        <h2>ИНИЦИАЛИЗАЦИЯ ЯДРА</h2>
-        <p>Загрузка основных систем сервера</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCENE 2: МОДЕЛИ -->
-  <div id="scene2" class="scene-container scene2-bg">
-    <div class="scene-content">
-      <div class="loader-wrapper">
-        <div class="scene2-model"></div>
-        <div class="scene2-model"></div>
-        <div class="scene2-model"></div>
-      </div>
-      <div class="scene-text">
-        <h2>ЗАГРУЗКА МОДЕЛЕЙ</h2>
-        <p>Оптимизация 3D-моделей персонажей и транспорта</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCENE 3: ТЕКСТУРЫ -->
-  <div id="scene3" class="scene-container scene3-bg">
-    <div class="scene-content">
-      <div class="loader-wrapper scene3-loader">
-        <div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div>
-        <div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div>
-        <div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div>
-        <div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div><div class="scene3-tile"></div>
-      </div>
-      <div class="scene-text">
-        <h2>КОМПИЛЯЦИЯ ТЕКСТУР</h2>
-        <p>Загрузка PNG и VTF материалов</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCENE 4: АУДИО -->
-  <div id="scene4" class="scene-container scene4-bg">
-    <div class="scene-content">
-      <div class="loader-wrapper scene4-loader">
-        <div class="scene4-wave"></div><div class="scene4-wave"></div><div class="scene4-wave"></div>
-        <div class="scene4-wave"></div><div class="scene4-wave"></div><div class="scene4-wave"></div>
-        <div class="scene4-wave"></div><div class="scene4-wave"></div><div class="scene4-wave"></div>
-      </div>
-      <div class="scene-text">
-        <h2>ИНИЦИАЛИЗАЦИЯ АУДИО</h2>
-        <p>Загрузка звуковых библиотек и эффектов</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCENE 5: СКРИПТЫ -->
-  <div id="scene5" class="scene-container scene5-bg">
-    <div class="scene-content">
-      <div class="loader-wrapper">
-        <div class="scene5-code">if SERVER then return end</div>
-      </div>
-      <div class="scene-text">
-        <h2>КОМПИЛЯЦИЯ СКРИПТОВ</h2>
-        <p>Загрузка CL, SV и SH скриптов</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCENE 6: МАТЕРИАЛЫ -->
-  <div id="scene6" class="scene-container scene6-bg">
-    <div class="scene-content">
-      <div class="loader-wrapper scene6-loader"></div>
-      <div class="scene-text">
-        <h2>ЗАГРУЗКА МАТЕРИАЛОВ</h2>
-        <p>Компиляция VTF и PNG текстур</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCENE 7: ИГРОКИ -->
-  <div id="scene7" class="scene-container scene7-bg">
-    <div class="scene-content">
-      <div class="loader-wrapper scene7-loader">
-        <div class="scene7-player"></div>
-        <div class="scene7-player"></div>
-        <div class="scene7-player"></div>
-        <div class="scene7-player"></div>
-      </div>
-      <div class="scene-text">
-        <h2>ЗАГРУЗКА ИГРОКОВ</h2>
-        <p>Инициализация системы игроков</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCENE 8: ОРУЖИЕ -->
-  <div id="scene8" class="scene-container scene8-bg">
-    <div class="scene-content">
-      <div class="loader-wrapper scene8-loader">
-        <div class="scene8-weapon"></div>
-        <div class="scene8-weapon"></div>
-      </div>
-      <div class="scene-text">
-        <h2>ЗАГРУЗКА ОРУЖИЯ</h2>
-        <p>Инициализация оружейной системы</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCENE 9: РЕЖИМ ИГРЫ -->
-  <div id="scene9" class="scene-container scene9-bg">
-    <div class="scene-content">
-      <div class="loader-wrapper scene9-loader">
-        <div class="scene9-mode"></div>
-      </div>
-      <div class="scene-text">
-        <h2>ЗАГРУЗКА РЕЖИМА</h2>
-        <p>Инициализация игрового режима DARK RP</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCENE 10: ФИНАЛИЗАЦИЯ -->
-  <div id="scene10" class="scene-container scene10-bg">
-    <div class="scene-content">
-      <div class="loader-wrapper scene10-loader">
-        <div class="scene10-ring"></div>
-        <div class="scene10-ring"></div>
-        <div class="scene10-ring"></div>
-        <div class="scene10-center"></div>
-      </div>
-      <div class="scene-text">
-        <h2>ФИНАЛИЗАЦИЯ ЗАГРУЗКИ</h2>
-        <p>Проверка целостности и оптимизация</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- COMPLETION MESSAGE -->
-  <div class="completion-message" id="completion-message">
-    ЗАГРУЗКА ЗАВЕРШЕНА! ПОДКЛЮЧЕНИЕ К СЕРВЕРУ...
-  </div>
-
-  <script>
-    (function(){
-      const scenes = [
-        'scene1', 'scene2', 'scene3', 'scene4', 'scene5',
-        'scene6', 'scene7', 'scene8', 'scene9', 'scene10'
-      ];
-      
-      const sceneElements = scenes.map(id => document.getElementById(id));
-      let currentSceneIndex = 0;
-      let switchInterval;
-      let isCompleted = false;
-      const sceneDuration = 3500; // 3.5 секунды на каждую сцену
-      
-      // Функция переключения сцены
-      function nextScene() {
-        if (isCompleted) return;
+    <!-- Background System -->
+    <div class="bg-container">
+        <div class="bg-image"></div>
+        <div class="bg-overlay"></div>
+        <div class="bg-noise"></div>
         
-        // Скрываем текущую сцену
-        sceneElements[currentSceneIndex].classList.remove('active');
+        <!-- Soft Neon Orbs -->
+        <div class="orbs-container">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
+        </div>
+    </div>
+
+    <!-- Main UI -->
+    <div class="ui-layer">
         
-        // Проверяем, если это последняя сцена
-        if (currentSceneIndex === scenes.length - 1) {
-          completeLoading();
-          return;
+        <!-- Header -->
+        <div class="header">
+            <img src="assets/logo.png" alt="Logo" class="logo-img" onerror="this.style.opacity=0">
+            <div class="branding">
+                <h1>BlockLife RP</h1>
+                <span>DARK ROLEPLAY</span>
+            </div>
+        </div>
+
+        <!-- Center Loader & Status -->
+        <div class="loader-container">
+            <div class="radar-loader">
+                <svg viewBox="0 0 80 80">
+                    <!-- Outer Ring -->
+                    <circle class="radar-track" cx="40" cy="40" r="36"></circle>
+                    <!-- Inner Dashed Ring -->
+                    <circle class="radar-track-dashed" cx="40" cy="40" r="28"></circle>
+                    <!-- Animated Progress Ring -->
+                    <circle class="radar-progress" cx="40" cy="40" r="36"></circle>
+                </svg>
+                <div class="radar-core"></div>
+            </div>
+
+            <div class="status-group">
+                <div id="status-text" class="status-text">Загрузка ресурсов...</div>
+                <div class="hint-text">Пожалуйста, ожидайте инициализации системы</div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="progress-track">
+                <div id="progress-bar" class="progress-fill"></div>
+            </div>
+            <div class="server-info">BlockLife // Secure Connection // v1.0.4</div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const statuses = [
+            "Загрузка ресурсов...",
+            "Компиляция шейдеров...",
+            "Инициализация аддонов...",
+            "Синхронизация клиента...",
+            "Подготовка спавна..."
+        ];
+
+        const hint = "Пожалуйста, ожидайте инициализации системы";
+        
+        // --- LOGIC ---
+        const statusEl = document.getElementById('status-text');
+        const progressEl = document.getElementById('progress-bar');
+        let currentIndex = 0;
+
+        // Simulate GMod Progress (Fake, as HTML doesn't have direct access to GMod download progress without Lua integration)
+        // We will animate a smooth progress bar that fills up slowly and loops if loading takes long
+        let progress = 0;
+        const simulateProgress = () => {
+            // Slowly increase progress, capped at 95% (waiting for server confirmation)
+            if (progress < 95) {
+                progress += Math.random() * 0.5;
+                progressEl.style.width = progress + "%";
+            }
+            requestAnimationFrame(simulateProgress);
+        };
+        simulateProgress();
+
+        // Status Text Cycle
+        function updateStatus() {
+            // Fade out
+            statusEl.style.animation = 'none';
+            statusEl.offsetHeight; /* Trigger reflow */
+            
+            // Change Text
+            statusEl.textContent = statuses[currentIndex];
+            
+            // Fade In (restart animation)
+            statusEl.style.animation = 'fadeText 4s forwards';
+            
+            // Cycle Index
+            currentIndex = (currentIndex + 1) % statuses.length;
+        }
+
+        // Start Cycle
+        updateStatus(); // Initial call
+        setInterval(updateStatus, 4000); // Change every 4 seconds
+
+        // --- GMOD INTEGRATION HOOKS (Placeholders) ---
+        // In a real GMod environment, you would call these from Lua
+        /*
+        function SetProgress(val) {
+            progress = val;
+            progressEl.style.width = val + "%";
         }
         
-        // Переходим к следующей сцене
-        currentSceneIndex++;
-        
-        // Показываем следующую сцену с небольшой задержкой для плавности
-        setTimeout(() => {
-          sceneElements[currentSceneIndex].classList.add('active');
-        }, 300);
-      }
-      
-      // Завершение загрузки
-      function completeLoading() {
-        isCompleted = true;
-        
-        if (switchInterval) {
-          clearInterval(switchInterval);
+        function SetStatus(text) {
+            statusEl.textContent = text;
         }
-        
-        // Показываем финальное сообщение
-        setTimeout(() => {
-          document.getElementById('completion-message').classList.add('show');
-        }, 800);
-        
-        // Перенаправление через 3 секунды
-        setTimeout(() => {
-          console.log('Загрузка завершена, подключение к серверу...');
-          // window.location.href = 'game.html'; // Раскомментировать для реального перенаправления
-        }, 3000);
-      }
-      
-      // Автопереключение сцен
-      function startSceneSwitching() {
-        switchInterval = setInterval(() => {
-          nextScene();
-        }, sceneDuration);
-      }
-      
-      // Инициализация
-      startSceneSwitching();
-      
-      // Ручное переключение пробелом
-      document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && !isCompleted) {
-          nextScene();
-          if (switchInterval) {
-            clearInterval(switchInterval);
-            startSceneSwitching();
-          }
-        }
-      });
-      
-      // Клик для переключения (для мобильных устройств)
-      document.addEventListener('click', (e) => {
-        if (!isCompleted) {
-          nextScene();
-          if (switchInterval) {
-            clearInterval(switchInterval);
-            startSceneSwitching();
-          }
-        }
-      });
-      
-      // Запрет контекстного меню
-      document.addEventListener("contextmenu", e => e.preventDefault());
-    })();
-  </script>
+        */
+    </script>
 </body>
 </html>
